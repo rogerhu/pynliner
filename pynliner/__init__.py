@@ -30,8 +30,9 @@ class Pynliner(object):
     stylesheet = False
     output = False
 
-    def __init__(self, log=None):
+    def __init__(self, log=None, case_sensitive=True):
         self.log = log
+        self.case_sensitive = case_sensitive
         cssutils.log.enabled = False if log is None else True
 
     def from_url(self, url):
@@ -183,7 +184,7 @@ class Pynliner(object):
             selectors = rule.selectorText.split(',')
             elements = []
             for selector in selectors:
-                elements += select(self.soup, selector)
+                elements += select(self.soup, selector, self.case_sensitive)
             # build prop_list for each selected element
             for elem in elements:
                 if elem not in elem_prop_map:
@@ -203,7 +204,6 @@ class Pynliner(object):
             for prop_list in map(lambda obj: obj['props'], props):
                 for prop in prop_list:
                     elem_style_map[elem][prop.name] = prop.value
-
 
         # apply rules to elements
         for elem, style_declaration in elem_style_map.items():
@@ -232,12 +232,12 @@ def fromURL(url, log=None):
     """
     return Pynliner(log).from_url(url).run()
 
-def fromString(string, log=None):
+def fromString(string, log=None, case_sensitive=True):
     """Shortcut Pynliner constructor. Equivelent to:
 
     >>> Pynliner().from_string(someString).run()
 
     Returns processed HTML string.
     """
-    return Pynliner(log).from_string(string).run()
+    return Pynliner(log, case_sensitive=case_sensitive).from_string(string).run()
 
