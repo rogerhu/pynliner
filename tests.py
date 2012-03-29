@@ -193,7 +193,7 @@ class LogOptions(unittest.TestCase):
 
         self.p.run()
         log_contents = self.logstream.getvalue()
-        self.assertIn("DEBUG", log_contents)
+        self.assertTrue("DEBUG" in log_contents)
 
 class BeautifulSoupBugs(unittest.TestCase):
 
@@ -201,12 +201,12 @@ class BeautifulSoupBugs(unittest.TestCase):
         self.html = """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">"""
         output = pynliner.fromString(self.html)
-        self.assertNotIn("<!<!", output)
+        self.assertTrue("<!<!" not in output)
 
     def test_double_comment(self):
         self.html = """<!-- comment -->"""
         output = pynliner.fromString(self.html)
-        self.assertNotIn("<!--<!--", output)
+        self.assertTrue("<!--<!--" not in output)
 
 class ComplexSelectors(unittest.TestCase):
 
@@ -251,6 +251,7 @@ class ComplexSelectors(unittest.TestCase):
         expected = u"""<h1 title="foo" style="color: red">Hello World!</h1>"""
         output = Pynliner().from_string(html).with_cssString(css).run()
         self.assertEqual(output, expected)
+
 
 if __name__ == '__main__':
     unittest.main()
