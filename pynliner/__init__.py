@@ -82,7 +82,7 @@ class Pynliner(object):
             self.style_string += cssString + u'\n'
         return self
 
-    def run(self):
+    def run(self, prettify=False):
         """Applies each step of the process if they have not already been
         performed.
 
@@ -97,7 +97,7 @@ class Pynliner(object):
         if not self.stylesheet:
             self._get_styles()
         self._apply_styles()
-        return self._get_output()
+        return self._get_output(prettify=prettify)
 
     def _get_url(self, url):
         """Returns the response content from the given url
@@ -212,12 +212,15 @@ class Pynliner(object):
             else:
                 elem['style'] = style_declaration.cssText.replace('\n', ' ')
 
-    def _get_output(self):
+    def _get_output(self, prettify=False):
         """Generate Unicode string of `self.soup` and set it to `self.output`
 
         Returns self.output
         """
-        self.output = unicode(str(self.soup))
+        if prettify:
+            self.output = self.soup.prettify()
+        else:
+            self.output = unicode(str(self.soup))
         return self.output
 
 def fromURL(url, log=None):
